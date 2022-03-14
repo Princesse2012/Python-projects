@@ -1,6 +1,7 @@
 Assignment
 Meteorologists use the Saffir-Simpson Scale to classify the strength of hurricanes. The intensity is based on the maximum sustained wind speed of a storm as follows:
-
+#I originally created the variable for the wind speed to be an integer which I entered as speed = int (input("Please enter the wind speed (mph): ")) but I noticed in the solution file the eval function was used instead. Can you please provide some insight as to why the eval function was chosen instead
+# Isn't using eval() considered bad programming practice?
 Category	Wind Speed (mph)
 1	74-95
 2	96-110
@@ -32,3 +33,10 @@ elif speed <= 155:
     print ("Category 4")
 else:
     print ("Category 5")
+Compound Conditions - Pros/Cons
+
+Advantages: minimize lines of code, makes more easy to understand the code when more conditions are triggering a behavior
+
+Disadvantages: it may get difficult to read if more than two conditions need to be evaluated. It may require the use of brackets to separate sub conditions or math operations
+
+Scenario: Preparing taxes and deciding what type of expenses could be deducted
