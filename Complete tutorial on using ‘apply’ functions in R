@@ -1,0 +1,232 @@
+https://www.r-bloggers.com/2022/03/complete-tutorial-on-using-apply-functions-in-r/?utm_source=phpList&utm_medium=email&utm_campaign=R-bloggers-daily&utm_content=HTML
+
+Today I’m going to talk about a useful family of functions that allows you to repetitively perform a specified function (e.g., sum(), mean()) across a vector, list, matrix, or data frame. For those of you familiar with ‘for’ loops, the apply() family often allows you to avoid constructing those and instead wrap the loop into one simple function.
+
+I’m going to discuss the functions apply(), lapply(), sapply(), and tapply() in this blog post (as well as using the dplyr library for similar tasks). These functions all end in apply() because you apply the function you want across all the specified elements.
+
+Let’s see how they work.
+The apply() function
+Let’s start with the apply() function. First, we’ll create an example data set. This data set is in wide format* and describes the heights of five individuals (e.g., plants) in inches at three different time points (0, 10, and 20 days). The first column contains the IDs for each individual, and each successive column describes their heights at time points 0, 10, and 20 in that order.
+
+*Note: Wide format refers to having multiple repeated variations of the same column. In this example, Long format would entail having just one column for ‘height’ with the values 0, 10, and 20 listed below.
+# Create data frame
+example <- data.frame(indiv = c("A", "B", "C", "D", "E"),
+height_0 = c(15, 10, 12, 9, 17),
+height_10 = c(20, 18, 14, 15, 19),
+height_20 = c(23, 24, 18, 17, 26))
+# View the data frame
+head(example)
+## indiv height_0 height_10 height_20
+## 1 A 15 20 23
+## 2 B 10 18 24
+## 3 C 12 14 18
+## 4 D 9 15 17
+## 5 E 17 19 26
+apply() lets you perform a function across a data frame’s rows or columns. In the arguments, you specify what you want as follows: apply(X = data.frame, MARGIN = 1, FUN = function.you.want). First, you enter the data frame you want to analyze, then MARGIN asks you which dimension you want to analyze. MARGIN = 1 indicates that you want to analyze across the data frame’s rows, while MARGIN = 2 analyzes across columns. Then you enter the name of the function that will be applied to the rows or columns (don’t include parentheses or function arguments).
+
+So let’s try finding the mean plant height for each row (i.e., for each individual). We also have to subset our data to only contain height values (columns 2 through 4) because our first column contains the individual identifiers.
+
+# Calculating the mean for each row in the data frame
+row.avg <- apply(X = example[, 2:4], MARGIN = 1, FUN = mean)
+# View row.avg
+row.avg
+## [1] 19.33333 17.33333 14.66667 13.66667 20.66667
+This returns a vector where each position corresponds to the row number that was averaged. Individual A’s average height is in position 1, B’s is in position 2, etc.
+
+If we find the mean for each column (i.e., each time point), it returns a vector with named positions for each column that was analyzed.
+
+# Calculating the mean for each column in the data frame
+col.avg <- apply(example[, 2:4], 2, mean)
+# View col.avg
+col.avg
+## height_0 height_10 height_20
+## 12.6 17.2 21.6
+Note: I used finding the mean as an example, but if you were actually trying to find the mean across the rows or columns of a data frame, you should use the rowMeans() or colMeans() functions instead of apply(), as they work more efficiently.
+You don’t just have to use pre-made functions like sum() or mean(). You could also write your own function to use. In the code below, I wrote a function that tells you if the average plant height is above 15 inches.
+
+# Create function is_tall
+is_tall <- function(x) {
+value <- mean(x) > 15
+return(value)
+}
+# Apply the function to the columns in the data frame
+apply(example[, 2:4], 2, is_tall)
+## height_0 height_10 height_20
+## FALSE TRUE TRUE
+This tells me that at time point 0, the plants are not taller than 15 cm on average, while the opposite is true for time points 10 and 20.
+
+The lapply() function
+Let’s look at another function, called lapply(). The “L” in front of “apply” stands for “lists”, because this function is used on list objects and returns a list as well.
+
+I created a list called plants, containing three elements that are each vectors with a length of ten. Each element in the list contains different plant attributes (height, mass, and # of flowers). I used the runif() function to generate random numbers, and used the sample() function to generate random integers between one and ten.
+
+# Set seed so that the randomly-generated numbers are the same each time
+set.seed(123)
+# Create a list using randomly-generated numbers
+plants <- list(height = runif(10, min = 10, max = 20),
+mass = runif(10, min = 5, max = 10),
+flowers = sample(1:10, 10))
+# View the list
+plants
+## $height
+## [1] 12.87578 17.88305 14.08977 18.83017 19.40467 10.45556 15.28105 18.92419
+## [9] 15.51435 14.56615
+##
+## $mass
+## [1] 9.784167 7.266671 8.387853 7.863167 5.514623 9.499125 6.230439 5.210298
+## [9] 6.639604 9.772518
+##
+## $flowers
+## [1] 9 10 1 5 3 2 6 7 8 4
+If we wanted to calculate the average value for each list element, we could do it individually:
+
+mean(plants$height)
+## [1] 15.78248
+mean(plants$mass)
+## [1] 7.616846
+mean(plants$flowers)
+## [1] 5.5
+This method is pretty inefficient and makes us repeat our code. And what if we have more than three list elements? That would be a pain to type out. Let’s try another method.
+
+We could create a for loop and save the results in a vector:
+
+# Create an empty vector
+plant_avgs <- c()
+# Loop the averages for each element and save in our vector
+for(i in 1:3){
+plant_avgs[i] <- mean(plants[[i]])
+}
+# View the vector
+plant_avgs
+## [1] 15.782475 7.616846 5.500000
+This method is better because it automates the process, which would be especially useful if our list had a ton of elements. But for loops also take more time to run and construct, and still take up quite a bit of space in our code.
+
+Let’s try one last method: using lapply() to wrap this whole process into a neat function. lapply() doesn’t have the MARGIN argument that apply() has. Instead, lapply() already knows that it should apply the specified function across all list elements. You can just type lapply(X = list, FUN = function.you.want), like this:
+
+# Use lapply to find the mean of each list element
+lapply(plants, mean)
+## $height
+## [1] 15.78248
+##
+## $mass
+## [1] 7.616846
+##
+## $flowers
+## [1] 5.5
+You’ll notice that the output of lapply() is also a list, where the means of height, mass, and flowers are saved as list elements of the same name. lapply() does the same thing as the for loop, but is far more efficient in terms of space and effort. lapply() ends up being the best of the three methods I just showed you.
+
+The sapply() function
+In the previous example, our means were returned as elements in a list, but each list element was represented by just one value. There wasn’t really any reason for those values to be put in a list format instead of, say, a vector.
+
+This is where the sapply() function comes in. It goes hand-in-hand with lapply() and works the same way, where it can accept a list and a function name as the input. But instead of returning a list, it will return the answers in the simplest possible format. In our case, this would mean returning the answers as a vector like below, which usually makes it easier to work with down the line.
+
+# Use sapply to find the mean of each list element
+sapply(plants, mean)
+## height mass flowers
+## 15.782475 7.616846 5.500000
+The tapply() function
+The tapply() function works in much the same way as the other functions, but allows you to perform an operation across specified groups in your data. For those of you familiar with the dplyr package, this does the same thing as the group_by() and summarize() functions.
+
+Let’s return to our example data set from before, where we described the heights of several different individuals over time. This time, we’re going to write the data in long format, so that each row represents one observation. Stay tuned for a tutorial post on reshaping data in R coming soon if you’re interested in learning more about wide vs. long format data.
+
+# Load library to use the pivot_longer() function
+library(tidyverse)
+# Pivot the data so that the data are in long format instead of wide format
+example <- pivot_longer(example, cols = 2:4, names_to = "time", values_to = "height")
+# Use sub() to get rid of the string "height_" in front of the time values
+example$time <- sub("height_", "", example$time)
+# View data
+head(example)
+## # A tibble: 6 × 3
+## indiv time height
+## <chr> <chr> <dbl>
+## 1 A 0 15
+## 2 A 10 20
+## 3 A 20 23
+## 4 B 0 10
+## 5 B 10 18
+## 6 B 20 24
+You can see that now we have a column for time, with values of 0, 10, and 20. Let’s use tapply() to look at each individuals' heights, grouped by time. The function accepts a new argument called INDEX: tapply(X = vector.to.analyze, INDEX = vector.to.group.by, FUN = function.you.want). In the code below, I wanted to analyze the height values grouped by time, using the function mean().
+
+# Use tapply() to find average height by time grouping
+tapply(X = example$height, INDEX = example$time, mean)
+## 0 10 20
+## 12.6 17.2 21.6
+Looks good! tapply() returned a vector of values for the average heights at different time points.
+
+Note: You may have noticed that in all of my examples, I’m using apply() across a list or a data frame. Even though the apply() family of functions can be used across a simple vector, there’s often no need to do so. Most functions in R are already “vectorized”, which means the function will be applied to each element of the vector instead of having to loop through one element at a time. For example, the sqrt() function is vectorized. Doing sqrt(vector) and sapply(vector, sqrt) will return the same answer, so using the apply() function is unnecessary. It is almost always faster to use the vectorized function than to run a loop or to use an apply() function, if you have the option. And in some cases, running a for loop might even be faster than using an apply() function. Check out this blog post by Michael Mayer for a great comparison of different methods.
+The apply() functions vs. dplyr functions
+Some of you may be wondering about how useful the apply() functions can be after you’ve learned how to use dplyr functions.
+
+I just demonstrated how to use tapply(), but the same thing could have been accomplished in dplyr. Below, I grouped the data by the time column, and created a column called avg_height that calculates the mean height for each time group. See our tutorial here for a more in-depth discussion of the group_by() function.
+
+# Show grouping example in dplyr
+example %>%
+group_by(time) %>%
+summarize(avg_height = mean(height)) %>%
+ungroup()
+## # A tibble: 3 × 2
+## time avg_height
+## <chr> <dbl>
+## 1 0 12.6
+## 2 10 17.2
+## 3 20 21.6
+This returns a table of values rather than a vector, but it still contains the same basic information. It shows the average heights of individuals at three different time points. So which method is better, dplyr functions or tapply()?
+
+The answer is that it depends on what you’re going to do afterwards! tapply() might be useful to get a quick answer. It’s one easy line of code that tells you the average heights. The dplyr method is useful if you’re going to keep working on the data. The pipe operator (%>%) allows you to use the output of one function as the input of another, without having to create intermediate variables.
+
+For example, in the code below, I wanted to not only summarize the average heights at each time point, but I also wanted to filter out only the heights that were greater than 15. I did that easily by adding another pipe to the end of my previous line and typing the next short bit of code.
+
+# Show grouping example in dplyr and further manipulation
+example %>%
+group_by(time) %>%
+summarize(avg_height = mean(height)) %>%
+ungroup() %>%
+filter(avg_height > 15)
+## # A tibble: 2 × 2
+## time avg_height
+## <chr> <dbl>
+## 1 10 17.2
+## 2 20 21.6
+There are other dplyr() functions that are analogous to the rest of the apply() family. For example, the across() function works similarly to apply(). Let’s go back to the previous wide format of our example data frame by using pivot_wider().
+
+# Turn the data frame back into wide format
+example <- pivot_wider(example, indiv, names_from = time, values_from = height)
+# View data frame
+head(example)
+## # A tibble: 5 × 4
+## indiv `0` `10` `20`
+## <chr> <dbl> <dbl> <dbl>
+## 1 A 15 20 23
+## 2 B 10 18 24
+## 3 C 12 14 18
+## 4 D 9 15 17
+## 5 E 17 19 26
+Let’s say we want to convert our height values from inches to centimeters by multiplying by 2.54. We can use the across() function to do this. In the code below, I wrote a quick function that multiplies your values by 2.54 to convert from inches to cm. Then I used the function mutate() to change the data frame. Using across(), I indicated that I wanted to modify columns 2 through 4 using the to_cm() function.
+
+# Write function called to_cm that converts values from inches to cm
+to_cm <- function(x){
+cm <- x * 2.54
+return(cm)
+}
+# Convert height from inches to centimeters
+example %>%
+mutate(across(2:4, to_cm))
+## # A tibble: 5 × 4
+## indiv `0` `10` `20`
+## <chr> <dbl> <dbl> <dbl>
+## 1 A 38.1 50.8 58.4
+## 2 B 25.4 45.7 61.0
+## 3 C 30.5 35.6 45.7
+## 4 D 22.9 38.1 43.2
+## 5 E 43.2 48.3 66.0
+And… ta-da! Our data has now been changed from inches to cm.
+
+If we were to perform an operation across rows in dplyr, we would need to group by rows using the rowwise() function before performing any other operation (it works the same way as the group_by() function, just groups by rows).
+
+Again, using the dplyr functions instead of apply() is up to your own discretion. apply() is an easy, one-line function that can account for row-wise and column-wise operations. But dplyr offers a useful grammar (pipes!) that allows you to keep working smoothly without interruption in your code. Different circumstances will call for different methods, and it might take some trial and error before you discover the method that works best for you in each situation.
+
+That concludes our summary of the apply() functions! We learned how to use apply(), lapply(), sapply(), and tapply(), and we discussed equivalent dplyr functions for apply() and tapply().
+
+Let us know what you think of apply() vs dplyr in the comments! Do you have a preferred method?
+
