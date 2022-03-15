@@ -1,0 +1,16 @@
+def myfun(num):
+ if num >= 4:
+    return num
+ elif num<4:
+    return 2
+ 
+print(myfun(3))
+
+2
+>>> fruits = ("pineapple", "strawberry", "grapes", "orange", "kiwi", "cherry", "mango")
+print(fruits[-4:-1])
+
+('orange', 'kiwi', 'cherry')
+>>> aTuple = (200, 300, 400, 500, 600)
+print(aTuple[-2])
+print(aTuple[-4:-1])
