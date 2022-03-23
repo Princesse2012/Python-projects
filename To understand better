@@ -1,0 +1,3 @@
+alphabets = ["a", "b", "c", "d", "e"]
+word = list(range(0)) + alphabets
+print(word)
