@@ -9,9 +9,43 @@ while counter < len(letters):
   word = word + letters[counter]
   counter = counter + 1
 print(word)
-
+#############
+result = 0
+numbers = [2, 4, 6]
+for num in numbers:
+  result = result + num
+print(result)
 ####################################
 letters = ["beach", "car"]
 funified = list(map(lambda word: f"{word} is fun!", letters))
 print(funified)
 ##############################################
+fruits = ["apple", "pear", "cherry"]
+print(fruits[-1])
+££££££££££££££££££££££££££££££££££££££££
+if 1:
+    print("1 is truthy!")
+else:
+    print("???")
+    #####
+if False:
+    print("Nissan")
+elif True:
+    print("Ford")
+elif True:
+    print("BMW")
+else:
+    print("Audi")
+###########################################
+languages = ["spanish"]
+languages.extend(["chinese", "polish"])
+print(languages)
+################################
+print(bool("Australia"))
+nums = [1, 2, 3, 4, 1, 4, 1]
+print(nums.count(1))
+#################################
+Which of the following will print the total numbers of 'A' in the word: "HOW ARE YOU"?
+word =  "HOW ARE YOU"
+print(word.count('A'))
+#############################
