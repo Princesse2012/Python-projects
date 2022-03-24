@@ -1,3 +1,17 @@
 alphabets = ["a", "b", "c", "d", "e"]
 word = list(range(0)) + alphabets
 print(word)
+#######################
+word = ""
+counter = 0
+letters = ["c", "a", "r"]
+while counter < len(letters):
+  word = word + letters[counter]
+  counter = counter + 1
+print(word)
+
+####################################
+letters = ["beach", "car"]
+funified = list(map(lambda word: f"{word} is fun!", letters))
+print(funified)
+##############################################
