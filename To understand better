@@ -118,3 +118,78 @@ for i in stuff:
         biggest = biggest if len(biggest) > len(j) else j
  
 print(biggest)
+################################
+num_of_nums = int(input(
+         "How many numbers do you want to average? "))
+
+sum = 0.0
+for count in range (num_of_nums):
+         value = int(input("Enter a value: "))
+         sum = sum + value
+
+average = sum / num_of_nums
+print ("The average is:", average)
+
+###################################
+num_of_nums = int(input(
+         "How many numbers do you want to average? "))
+
+sum = 0.0
+for count in range (num_of_nums, 0, -1):
+         value = int(input("Enter a value: "))
+         sum = sum + value
+
+average = sum / num_of_nums
+print ("The average is:", average)
+################################
+Nesting Loops
+Print the multiplication table for all the numbers between 0 and 10
+for i in range(0, 10):
+         print ("~~~", i, "~~~")
+         for j in range(0, 10):
+                   print (i*j)
+         print ( )
+Compound Conditions
+while answer == 'y' or 'Y':
+The correct version of this code looks like this:
+
+while answer == 'y' or answer == 'Y':
+#############################################
+for number in range(1, 11):
+         if number == 4:
+                   break
+         print (number)
+print ("Thanks!")
+for number in range(1, 11):
+         if number == 4:
+                   continue
+         print (number)
+print ("Thanks!")
+##############################################
+for number in range(1, 11):
+         if number == 4:
+                   continue
+         print (number)
+else:
+         print ("Exited normally")
+ ############################################
+#You then want your program to determine if that letter is somewhere in the phrase and report this to the user
+ phrase = input("Enter a phrase: ")
+letter = input("Enter a letter: ")
+length = len(phrase)
+
+for index in range(0, length):
+         if phrase [index] == letter:
+                   print ("The letter first appears at index: ", index)
+                   break
+else:
+         print ("Your letter wasn't found")
+############################################
+Write a program that reads in a list of numbers from the users and displays the sum and average of this list. 
+Your program should enable the users to enter as many numbers as they wish. 
+When the users are finished entering numbers, they'll enter the value -1. 
+Be sure not to include the -1 in your calculations for the sum and average.
+
+###################################################
+there are only three control structures that any programming language uses: sequence, decisions, and loops.
+ou've used two already: input and range. Functions are useful because they enable you to organize and make your code more modular
