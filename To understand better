@@ -189,7 +189,12 @@ Write a program that reads in a list of numbers from the users and displays the 
 Your program should enable the users to enter as many numbers as they wish. 
 When the users are finished entering numbers, they'll enter the value -1. 
 Be sure not to include the -1 in your calculations for the sum and average.
-
+Question 1, Incorrect, Multiple Choice
+####################################################
+What type of loop uses a variable to keep track of the number of times the loop body should execute?
+Counter controlled loop.
+Which of the following compound conditions will evaluate to true even when the value in the choice variable is "N"?
+choice == "Y" or "y"
 ###################################################
 there are only three control structures that any programming language uses: sequence, decisions, and loops.
 ou've used two already: input and range. Functions are useful because they enable you to organize and make your code more modular
