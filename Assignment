@@ -166,3 +166,4 @@ myTime.set_time( 8, 59, 45)
 for i in range(20):
     myTime.print_time()
     myTime.tick()
+https://docs.python.org/3/tutorial/classes.html
