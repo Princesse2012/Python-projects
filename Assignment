@@ -51,3 +51,118 @@ def convert_to_fahrenheit(celsius):
 for cel in range(0, 101, 10):
     # The \t here is used to insert a Tab into the output
     print (cel, "\t", convert_to_fahrenheit(cel))
+    
+    ############################################################
+   class Time:
+  """ Blueprint for a Time object"""
+  def __init__(self):
+     self.hour = 0
+     self.minute = 0
+     self.second = 0
+
+  def set_time(self, hour, minute, second):
+     self.hour = hour
+     self.minute = minute
+     self.second = second
+
+  def print_time(self):
+     print (self.hour, ":", self.minute, ":", self.second)
+
+# First Time object
+myTime1 = Time()
+myTime1.print_time()
+myTime1.set_time(1, 2, 3)
+
+# Second Time object
+myTime2 = Time()
+myTime2.set_time(12, 0, 0)
+
+print ("My two time objects are now storing:")
+myTime1.print_time()
+myTime2.print_time()
+
+
+
+
+########################################################
+
+Assignment
+Now is a great time to implement some of the more useful features of Python classes and finish our Time class. 
+Be sure that your class has the following:
+The two underscore characters for its variable names to restrict access as much as possible.
+A getter and setter function for each of the hour, minute, and second variables. 
+Be sure the set functions do the error checking necessary to insure valid times.
+A function named tick( ) that will increment the number of seconds by 1. 
+Be aware that this function will need to check to be sure that you haven't moved to the next minute or hour.
+When you're finished with your new and improved Time class, write a short Python program that creates a Time object and works with some of the functions. 
+Inside this program, you might consider writing a loop and placing a call to the tick function to watch your time move forward.
+
+# Introduction to Python Programming
+# Lesson 06 Assignment
+# Sample Solution
+
+class Time:
+    """ Blueprint for a Time object"""
+    def __init__(self):
+        self.__hour = 0
+        self.__minute = 0
+        self.__second = 0
+
+    def tick(self):
+        self.__second = self.__second + 1
+        if (self.__second == 60):
+            self.__second = 0
+            self.__minute = self.__minute + 1
+            if (self.__minute == 60):
+                self.__minute = 0
+                self.__hour = self.__hour + 1
+                if (self.__hour == 24):
+                    self.__hour = 0
+
+    def set_time(self, hour, minute, second):
+        self.set_hour(hour)
+        self.set_minute(minute)
+        self.set_second(second)
+
+    def print_time(self):
+        print (self.__hour, ":", self.__minute, ":", self.__second)
+
+    def set_hour(self, hour):
+        if (hour >= 0 and hour <= 23):
+            self.__hour = hour
+        else:
+            self.__hour = 0
+        
+    def set_minute(self, minute):
+        if (minute >= 0 and minute <= 59):
+            self.__minute = minute
+        else:
+            self.__minute = 0
+
+    def set_second(self, second):
+        if (second >= 0 and second <= 59):
+            self.__second = second
+        else:
+            self.__second = 0
+
+    def get_hour(self):
+        return self.__hour
+
+    def get_minute(self):
+        return self.__minute
+
+    def get_second(self):
+        return self.__second
+##########################################
+# Introduction to Python Programming
+# Lesson 06 Assignment
+# Sample Solution
+
+from PY3_L06_Solution_Time import Time
+myTime = Time()
+
+myTime.set_time( 8, 59, 45)
+
+for i in range(20):
+    myTime.print_time()
+    myTime.tick()
