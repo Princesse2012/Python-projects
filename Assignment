@@ -51,6 +51,10 @@ def convert_to_fahrenheit(celsius):
 for cel in range(0, 101, 10):
     # The \t here is used to insert a Tab into the output
     print (cel, "\t", convert_to_fahrenheit(cel))
+    ########################################################
+    Defining Python FunctionsOpens in new window
+http://www.tutorialspoint.com/python/python_functions.htm
+Functions can be a difficult subject at first. Visit this page for a different explanation that may help you visualize the different parts of a function definition and function call.
     
     ############################################################
    class Time:
@@ -167,3 +171,46 @@ for i in range(20):
     myTime.print_time()
     myTime.tick()
 https://docs.python.org/3/tutorial/classes.html
+
+from Time import Time
+from Time2 import Time
+
+# First Time object
+myTime1 = Time()
+myTime1.print_time()
+myTime1.set_time(1, 2, 3)
+
+# Secondary Time object
+myTime2 = Time()
+myTime2.set_time(12, 0, 0)
+
+print ("My two time objects are now storing:")
+myTime1.print_time()
+myTime2.print_time()
+######################################################################
+class Time:
+    """ Blueprint for a Time object"""
+    def __init__(self):
+        self.hour = 0
+        self.minute = 0
+        self.second = 0
+
+    def set_time(self, hour, minute, second):
+        self.hour = hour
+        self.minute = minute
+        self.second = second
+
+    def print_time(self):
+        print (self.hour, ":", self.minute, ":", self.second)
+#        print ('%d:%d:%d' % (self.hour, self.minute, self.second))
+###########################
+
+from Time2 import Time
+ 
+myTime1 = Time()
+myTime1.print_time()
+ 
+myTime1.hour = 50
+myTime1.print_time()
+
+########################################
